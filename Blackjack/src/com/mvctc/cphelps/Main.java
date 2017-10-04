@@ -7,7 +7,7 @@ import java.util.Scanner;
  * @author phelps47387
  * @version 1.0, 09/28/2017
  */
-public class CardRunner
+public class Main
 {
 	static Scanner keyboard = new Scanner(System.in);
 	public static void main( String args[] )
