@@ -59,15 +59,23 @@ public class Main
 		showHands(player, dealer); //shows first two cards of player and first for dealer
 		dealer.addCard(deck.getCard()); //adds dealer's second card
 		deck.removeCard(); //removes card just grabbed from the deck
+		
+		
 		if(dealer.hasBlackJack()) {
 			showHands(player, dealer);
 			System.out.println("Dealer has blackjack, good game!");
 			keyboard.close();
 			System.exit(0);
 		}
+		if(player.hasBlackJack()) {
+			System.out.println("You have blackjack, good game!");
+			keyboard.close();
+			System.exit(0);
+		}
 		System.out.println("\n");
+		
 		boolean gameOver = false;
-		while(!gameOver) { //the loop that will continue for the rest of the game
+		while(!gameOver) {
 			int menu = getMenuOption();
 			System.out.println();
 			switch(menu) { //when user either hits, stands, or surrenders
@@ -89,46 +97,16 @@ public class Main
 				deck.removeCard();
 				System.out.println("Dealer hits");
 				showHands(player, dealer);
-				if(dealer.getTotalValue() > 21) {
-					System.out.println("Dealer broke 21 and loses!");
-					gameOver = true;
-				}
-				else if(dealer.hasBlackJack() && !player.hasBlackJack()) { //game ends with dealer having blackjack
-					System.out.println("Dealer has blackjack and wins.");
-					gameOver = true;
-					
-				}
-				else if(dealer.hasBlackJack() && player.hasBlackJack()) { //game ends in a tie of blackjack
-					System.out.println("The game ends in a tie!");
-					gameOver = true;
-				}
 			}
 			else {
 				System.out.println("Dealer stands");
 				showHands(player, dealer);
 			}
 			
-			if(!gameOver) { //if the game is not already over after the dealer's turn
-				if(player.hasBlackJack()) { //player is exactly 21
-					System.out.println("You have blackjack and win!");
-					gameOver = true;
-				}
-				else if(player.getTotalValue() > 21) { //player is above 21
-					System.out.println("You broke 21 and lost.");
-					gameOver = true;
-				}
-				else if(menu == 2 && dealer.getTotalValue() >= 17) { //if player stands and dealer stands
-					if(player.getTotalValue() > dealer.getTotalValue()) { //if player beats dealer
-						System.out.println("You beat the dealer with " + player.getTotalValue() + " and them having " + dealer.getTotalValue() + "!");
-						gameOver = true;
-					}
-					else { //if dealer beats player
-						System.out.println("The dealer beat you with " + dealer.getTotalValue() + " and you having " + player.getTotalValue() + ".");
-						gameOver = true;
-					}
-				}
+			if(dealer.hasBlackJack() || player.hasBlackJack() || dealer.getTotalValue() > 21 || player.getTotalValue() > 21 || (dealer.getTotalValue() >= 17 && menu == 2)) { //if any of the end-game scenarios worked out to true
+				System.out.println(checkWin(player, dealer, menu));
+				gameOver = true;
 			}
-			System.out.println("\n");
 		}
 		System.out.println("Thanks for playing!");
 		keyboard.close();
@@ -195,5 +173,44 @@ public class Main
 			}
 		} while(option < 1 || option > 3);
 		return option;
+	}
+	
+	/**
+	 * Checks who won the game/if it ended in a tie
+	 * @param player hand of the player
+	 * @param dealer hand of the dealer
+	 * @param menu option player picked
+	 * @return String to output who won
+	 */
+	public static String checkWin(Hand player, Hand dealer, int menu) {
+		if(dealer.hasBlackJack() && player.hasBlackJack()) { //both have blackjack
+			return "You both have blackjack, game ends in a tie.";
+		}
+		else if(dealer.hasBlackJack()) { //just dealer has blackjack
+			return "Dealer has blackjack, you lose.";
+		}
+		else if(player.hasBlackJack()) { //just player has blackjack
+			return "You have blackjack, you win!";
+		}
+		else if(player.getTotalValue() > 21 && dealer.getTotalValue() > 21) { //both bust
+			return "You both bust, game ends in a tie.";
+		}
+		else if(dealer.getTotalValue() > 21) { //just dealer busts
+			return ("Dealer busts with " + dealer.getTotalValue() + ", you win!");
+		}
+		else if(player.getTotalValue() > 21) { //just player busts
+			return ("You bust with " + dealer.getTotalValue() + ", you lose.");
+		}
+		else if(dealer.getTotalValue() >= 17 && menu == 2) { //no new cards
+			if(player.getTotalValue() > dealer.getTotalValue()) { //if player beats dealer
+				return ("You beat the dealer with " + player.getTotalValue() + " and them having " + dealer.getTotalValue() + "!");
+			}
+			else { //if dealer beats player
+				return ("The dealer beat you with " + dealer.getTotalValue() + " and you having " + player.getTotalValue() + ".");
+			}
+		}
+		else {
+			return "";
+		}
 	}
 }
