@@ -13,7 +13,8 @@ public class CardRunner
 	public static void main( String args[] )
 	{
 		Deck deck = new Deck();
-		deck.shuffleList();
+		
+		//Outputs the rules of the game
 		System.out.println("Welcome to Blackjack!");
 		System.out.println("Rules: ");
 		System.out.println("> The goal is to get your total value higher than the dealer without going above 21");
@@ -24,9 +25,24 @@ public class CardRunner
 		System.out.println("  > Stand is to hold off another card");
 		System.out.println("> Dealer will always hit until their hand is 17 or higher");
 		System.out.println("> If you stand once the dealer is standing the game will end");
+		//End of rule outputs
 		
 		System.out.println("\n\n");
-		System.out.println("Deck shuffled, cards being dealt");
+		int numDecks;
+		System.out.println("How many decks would you like in the play deck(1-5)?");
+		do{ //gets how many decks they want added between 1 and 5
+			numDecks = keyboard.nextInt();
+			if(numDecks < 1 || numDecks > 5) {
+				System.out.print("It must be between 1 and 5 decks.");
+			}
+		}while(numDecks < 1 || numDecks > 5);
+		
+		for(int i = 2; i <= numDecks; i++) { //for loop to add all the decks required, accounting for the one default deck
+			deck.addDeck();
+		}
+		deck.shuffle();
+		
+		System.out.println("\nDeck shuffled, cards being dealt");
 		System.out.println();
 		Hand player = new Hand();
 		Hand dealer = new Hand();
@@ -39,9 +55,10 @@ public class CardRunner
 				deck.removeCard();
 			}
 		}
-		showHands(player, dealer);
-		dealer.addCard(deck.getCard());
-		deck.removeCard();
+		
+		showHands(player, dealer); //shows first two cards of player and first for dealer
+		dealer.addCard(deck.getCard()); //adds dealer's second card
+		deck.removeCard(); //removes card just grabbed from the deck
 		if(dealer.hasBlackJack()) {
 			showHands(player, dealer);
 			System.out.println("Dealer has blackjack, good game!");

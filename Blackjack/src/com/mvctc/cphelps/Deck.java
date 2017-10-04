@@ -72,11 +72,16 @@ public class Deck {
 	/**
 	 * Shuffles the deck
 	 */
-	public void shuffleList() {
-		for(BlackJackCard card : defaultDeck) {
-			shuffleDeck.add(card);
-		}
+	public void shuffle() {
         Collections.shuffle(shuffleDeck);
     }
 	
+	/**
+	 * Adds another deck of cards to "shuffled" deck
+	 */
+	public void addDeck() {
+		for(BlackJackCard card : defaultDeck) {
+			shuffleDeck.add(card);
+		}
+	}
 }
