@@ -92,7 +92,7 @@ public class Main
 				System.exit(0);
 			}
 			System.out.println();
-			if(dealer.getTotalValue() < 17) {
+			if(dealer.getTotalValue() < 17) { //dealer hits if they're not at or above 17
 				dealer.addCard(deck.getCard());
 				deck.removeCard();
 				System.out.println("Dealer hits");
